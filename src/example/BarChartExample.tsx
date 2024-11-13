@@ -18,37 +18,31 @@ function BarChartExample() {
         padding: 20,
       }}
     >
-      <div
+      <h1
         style={{
-          maxWidth: 1000,
-          margin: "0 auto",
+          fontWeight: "bold",
+          color: "#1f2937",
         }}
       >
-        <h1
-          style={{
-            fontWeight: "bold",
-            color: "#1f2937",
-          }}
-        >
-          Interactive Bar Chart
-        </h1>
-        <div
-          style={{
-            backgroundColor: "#fff",
-            padding: 20,
-            borderRadius: 16,
-            marginTop: 20,
-            boxShadow:
-              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-          }}
-        >
-          <BarChart
-            data={sampleData}
-            barWidth={40}
-            chartPadding={40}
-            height={300}
-          />
-        </div>
+        Interactive Bar Chart
+      </h1>
+      <div
+        style={{
+          backgroundColor: "#fff",
+          padding: 20,
+          borderRadius: 16,
+          marginTop: 20,
+          boxShadow:
+            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+          maxWidth: 800,
+        }}
+      >
+        <BarChart
+          data={sampleData}
+          barWidth={40}
+          chartPadding={40}
+          height={300}
+        />
       </div>
     </div>
   );

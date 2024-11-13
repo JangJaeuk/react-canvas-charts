@@ -55,6 +55,7 @@ function MultiSeriesBarChartExample() {
             barWidth={40}
             chartPadding={40}
             height={300}
+            tooltipTheme={"dark"}
           />
         </div>
       </div>

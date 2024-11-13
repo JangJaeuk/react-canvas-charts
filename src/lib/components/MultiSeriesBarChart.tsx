@@ -16,6 +16,11 @@ interface MultiSeriesBarChartProps {
   sidePadding?: number;
   chartPadding?: number;
   height?: number;
+  axisColor?: string;
+  gridColor?: string;
+  labelTextColor?: string;
+  gridTextColor?: string;
+  tooltipTheme?: "dark" | "white";
 }
 
 interface Tooltip {
@@ -37,6 +42,11 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
   sidePadding = 40,
   chartPadding = 40,
   height = 300,
+  axisColor = "#e5e7eb",
+  gridColor = "#f3f4f6",
+  labelTextColor = "#6b7280",
+  gridTextColor = "#6b7280",
+  tooltipTheme = "dark",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +104,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
 
     // 축 그리기
     ctx.beginPath();
-    ctx.strokeStyle = "#e5e7eb";
+    ctx.strokeStyle = axisColor;
     ctx.lineWidth = 1;
     ctx.moveTo(sidePadding, TOP_PADDING);
     ctx.lineTo(sidePadding, height - BOTTOM_PADDING);
@@ -103,7 +113,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
 
     // 그리드 및 그리드 텍스트 그리기
     const gridLines = 5;
-    ctx.strokeStyle = "#f3f4f6";
+    ctx.strokeStyle = gridColor;
     for (let i = 0; i <= gridLines; i++) {
       const y = TOP_PADDING + (chartHeight * i) / gridLines;
       ctx.beginPath();
@@ -112,7 +122,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
       ctx.stroke();
 
       const value = Math.round(maxValue - (maxValue * i) / gridLines);
-      ctx.fillStyle = "#6b7280";
+      ctx.fillStyle = gridTextColor;
       ctx.font = "12px Inter, sans-serif";
       ctx.textAlign = "right";
       ctx.fillText(value.toString(), sidePadding - GRID_TEXT_DIV, y + 4);
@@ -142,7 +152,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
         ctx.fill();
       });
 
-      ctx.fillStyle = "#6b7280";
+      ctx.fillStyle = labelTextColor;
       ctx.font = "12px Inter, sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(
@@ -162,7 +172,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
       ctx.fillStyle = serie.color;
       ctx.fillRect(x, legendY, 12, 12);
 
-      ctx.fillStyle = "#6b7280";
+      ctx.fillStyle = labelTextColor;
       ctx.font = "12px Inter, sans-serif";
       ctx.textAlign = "left";
       ctx.fillText(serie.name, x + 20, legendY + 10);
@@ -235,10 +245,16 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
       {tooltip.show && (
         <div
           className="chart-tooltip"
-          style={{
-            left: `${tooltip.x}px`,
-            top: `${tooltip.y}px`,
-          }}
+          style={
+            {
+              left: `${tooltip.x}px`,
+              top: `${tooltip.y}px`,
+              "--tooltip-bg-color":
+                tooltipTheme === "white" ? "white" : "black",
+              "--tooltip-text-color":
+                tooltipTheme === "white" ? "black" : "white",
+            } as React.CSSProperties
+          }
         >
           {tooltip.content}
         </div>

@@ -14,6 +14,11 @@ interface BarChartProps {
   sidePadding?: number;
   chartPadding?: number;
   height?: number;
+  axisColor?: string;
+  gridColor?: string;
+  labelTextColor?: string;
+  gridTextColor?: string;
+  tooltipTheme?: "dark" | "white";
 }
 
 interface Tooltip {
@@ -34,6 +39,11 @@ const BarChart: React.FC<BarChartProps> = ({
   sidePadding = 40,
   chartPadding = 40,
   height = 300,
+  axisColor = "#e5e7eb",
+  gridColor = "#f3f4f6",
+  labelTextColor = "#6b7280",
+  gridTextColor = "#6b7280",
+  tooltipTheme = "dark",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -89,7 +99,7 @@ const BarChart: React.FC<BarChartProps> = ({
 
     // 축 그리기
     ctx.beginPath();
-    ctx.strokeStyle = "#e5e7eb";
+    ctx.strokeStyle = axisColor;
     ctx.lineWidth = 1;
     ctx.moveTo(sidePadding, TOP_PADDING);
     ctx.lineTo(sidePadding, height - BOTTOM_PADDING);
@@ -98,7 +108,7 @@ const BarChart: React.FC<BarChartProps> = ({
 
     // 그리드 및 그리드 텍스트 그리기
     const gridLines = 5;
-    ctx.strokeStyle = "#f3f4f6";
+    ctx.strokeStyle = gridColor;
     for (let i = 0; i <= gridLines; i++) {
       const y = TOP_PADDING + (chartHeight * i) / gridLines;
       ctx.beginPath();
@@ -107,7 +117,7 @@ const BarChart: React.FC<BarChartProps> = ({
       ctx.stroke();
 
       const value = Math.round(maxValue - (maxValue * i) / gridLines);
-      ctx.fillStyle = "#6b7280";
+      ctx.fillStyle = gridTextColor;
       ctx.font = "12px Inter, sans-serif";
       ctx.textAlign = "right";
       ctx.fillText(value.toString(), sidePadding - GRID_TEXT_DIV, y + 4);
@@ -131,7 +141,7 @@ const BarChart: React.FC<BarChartProps> = ({
       ctx.fillStyle = item.color;
       ctx.fill();
 
-      ctx.fillStyle = "#6b7280";
+      ctx.fillStyle = labelTextColor;
       ctx.font = "12px Inter, sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(item.label, x + barWidth / 2, height - BOTTOM_PADDING + 24);
@@ -197,10 +207,16 @@ const BarChart: React.FC<BarChartProps> = ({
       {tooltip.show && (
         <div
           className="chart-tooltip"
-          style={{
-            left: `${tooltip.x}px`,
-            top: `${tooltip.y}px`,
-          }}
+          style={
+            {
+              left: `${tooltip.x}px`,
+              top: `${tooltip.y}px`,
+              "--tooltip-bg-color":
+                tooltipTheme === "white" ? "white" : "black",
+              "--tooltip-text-color":
+                tooltipTheme === "white" ? "black" : "white",
+            } as React.CSSProperties
+          }
         >
           {tooltip.content}
         </div>
