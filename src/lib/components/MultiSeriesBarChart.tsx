@@ -21,6 +21,7 @@ interface MultiSeriesBarChartProps {
   labelTextColor?: string;
   gridTextColor?: string;
   tooltipTheme?: "dark" | "white";
+  barSpacing?: number;
 }
 
 interface Tooltip {
@@ -47,6 +48,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
   labelTextColor = "#6b7280",
   gridTextColor = "#6b7280",
   tooltipTheme = "dark",
+  barSpacing = 4,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,7 +85,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
     resizeObserver.observe(container);
 
     return () => resizeObserver.disconnect();
-  }, [labels, series, height, barWidth, sidePadding, chartPadding]);
+  }, [labels, series, height, barWidth, barSpacing, sidePadding, chartPadding]);
 
   const drawChart = (
     ctx: CanvasRenderingContext2D,
@@ -97,7 +99,8 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
 
     const maxValue = Math.max(...series.flatMap((s) => s.data));
 
-    const groupWidth = barWidth * series.length;
+    const groupWidth =
+      barWidth * series.length + barSpacing * (series.length - 1);
     const availableWidth = chartWidth - chartPadding * 2;
     const spacing =
       (availableWidth - groupWidth * labels.length) / (labels.length - 1);
@@ -135,7 +138,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
 
       series.forEach((serie, serieIndex) => {
         const value = serie.data[groupIndex];
-        const x = groupX + barWidth * serieIndex;
+        const x = groupX + (barWidth + barSpacing) * serieIndex;
         const barHeight = (value / maxValue) * chartHeight;
         const y = height - BOTTOM_PADDING - barHeight;
 
@@ -188,7 +191,8 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    const groupWidth = barWidth * series.length;
+    const groupWidth =
+      barWidth * series.length + barSpacing * (series.length - 1);
     const chartWidth = rect.width - sidePadding * 2;
     const availableWidth = chartWidth - chartPadding * 2;
     const spacing =
@@ -201,7 +205,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
         sidePadding + chartPadding + (groupWidth + spacing) * groupIndex;
 
       series.forEach((serie, serieIndex) => {
-        const barX = groupX + barWidth * serieIndex;
+        const barX = groupX + (barWidth + barSpacing) * serieIndex;
         const value = serie.data[groupIndex];
         const maxValue = Math.max(...series.flatMap((s) => s.data));
         const chartHeight = rect.height - (TOP_PADDING + BOTTOM_PADDING);
