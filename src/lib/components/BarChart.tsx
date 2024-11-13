@@ -13,6 +13,7 @@ interface BarChartProps {
   barWidth?: number;
   sidePadding?: number;
   chartPadding?: number;
+  height?: number;
 }
 
 interface Tooltip {
@@ -32,6 +33,7 @@ const BarChart: React.FC<BarChartProps> = ({
   barWidth = 60,
   sidePadding = 40,
   chartPadding = 40,
+  height = 300,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ const BarChart: React.FC<BarChartProps> = ({
     if (!canvas || !container) return;
 
     const handleResize = () => {
-      const { width, height } = container.getBoundingClientRect();
+      const { width } = container.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
 
       canvas.style.width = `${width}px`;
@@ -68,7 +70,7 @@ const BarChart: React.FC<BarChartProps> = ({
     resizeObserver.observe(container);
 
     return () => resizeObserver.disconnect();
-  }, [data, barWidth, chartPadding, sidePadding]);
+  }, [data, height, barWidth, chartPadding, sidePadding]);
 
   const drawChart = (
     ctx: CanvasRenderingContext2D,
