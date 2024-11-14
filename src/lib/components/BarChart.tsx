@@ -45,6 +45,7 @@ const BarChart: React.FC<BarChartProps> = ({
   gridTextColor = "#6b7280",
   tooltipTheme = "dark",
 }) => {
+  const animationRef = useRef<number>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = useState<Tooltip>({
@@ -53,6 +54,16 @@ const BarChart: React.FC<BarChartProps> = ({
     y: 0,
     content: "",
   });
+  const [animationProgress, setAnimationProgress] = useState(0);
+
+  useEffect(() => {
+    requestAnimationFrame(animate);
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -80,7 +91,21 @@ const BarChart: React.FC<BarChartProps> = ({
     resizeObserver.observe(container);
 
     return () => resizeObserver.disconnect();
-  }, [data, height, barWidth, chartPadding, sidePadding]);
+  }, [data, height, barWidth, chartPadding, sidePadding, animationProgress]);
+
+  const animate = (timestamp: number) => {
+    if (!animationRef.current) {
+      animationRef.current = timestamp;
+    }
+
+    // 1초 동안 애니메이션
+    const progress = Math.min((timestamp - animationRef.current) / 1000, 1);
+    setAnimationProgress(progress);
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    }
+  };
 
   const drawChart = (
     ctx: CanvasRenderingContext2D,
@@ -123,17 +148,23 @@ const BarChart: React.FC<BarChartProps> = ({
       ctx.fillText(value.toString(), sidePadding - GRID_TEXT_DIV, y + 4);
     }
 
+    const easeOutCubic = (x: number): number => {
+      return 1 - Math.pow(1 - x, 3);
+    };
+    const easedProgress = easeOutCubic(animationProgress);
+
     // 바 그리기
     data.forEach((item, index) => {
       const x = sidePadding + chartPadding + (barWidth + spacing) * index;
       const barHeight = (item.value / maxValue) * chartHeight;
-      const y = height - BOTTOM_PADDING - barHeight;
+      const animatedHeight = barHeight * easedProgress;
+      const y = height - BOTTOM_PADDING - animatedHeight;
 
       ctx.beginPath();
       const radius = 4;
       ctx.moveTo(x, y + radius);
-      ctx.lineTo(x, y + barHeight);
-      ctx.lineTo(x + barWidth, y + barHeight);
+      ctx.lineTo(x, y + animatedHeight);
+      ctx.lineTo(x + barWidth, y + animatedHeight);
       ctx.lineTo(x + barWidth, y + radius);
       ctx.quadraticCurveTo(x + barWidth, y, x + barWidth - radius, y);
       ctx.lineTo(x + radius, y);
