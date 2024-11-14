@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./chart.css";
+import Tooltip, { TooltipInfo, TooltipTheme } from "./Tooltip";
 
 interface DataPoint {
   label: string;
@@ -18,14 +19,7 @@ interface BarChartProps {
   gridColor?: string;
   labelTextColor?: string;
   gridTextColor?: string;
-  tooltipTheme?: "dark" | "white";
-}
-
-interface Tooltip {
-  show: boolean;
-  x: number;
-  y: number;
-  content: string;
+  tooltipTheme?: TooltipTheme;
 }
 
 const TOP_PADDING = 30 as const;
@@ -48,11 +42,12 @@ const BarChart: React.FC<BarChartProps> = ({
   const animationRef = useRef<number>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [tooltip, setTooltip] = useState<Tooltip>({
+  const [tooltip, setTooltip] = useState<TooltipInfo>({
     show: false,
     x: 0,
     y: 0,
     content: "",
+    theme: tooltipTheme,
   });
   const [animationProgress, setAnimationProgress] = useState(0);
 
@@ -213,6 +208,7 @@ const BarChart: React.FC<BarChartProps> = ({
           x: barX + barWidth / 2,
           y: barY,
           content: `${item.label}: ${item.value}`,
+          theme: tooltipTheme,
         });
         tooltipShown = true;
       }
@@ -235,23 +231,7 @@ const BarChart: React.FC<BarChartProps> = ({
         onMouseLeave={handleMouseLeave}
         className="chart-canvas"
       />
-      {tooltip.show && (
-        <div
-          className="chart-tooltip"
-          style={
-            {
-              left: `${tooltip.x}px`,
-              top: `${tooltip.y}px`,
-              "--tooltip-bg-color":
-                tooltipTheme === "white" ? "white" : "black",
-              "--tooltip-text-color":
-                tooltipTheme === "white" ? "black" : "white",
-            } as React.CSSProperties
-          }
-        >
-          {tooltip.content}
-        </div>
-      )}
+      <Tooltip tooltip={tooltip} />
     </div>
   );
 };

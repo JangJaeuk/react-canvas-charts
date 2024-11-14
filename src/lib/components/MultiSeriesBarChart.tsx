@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Tooltip, { TooltipInfo } from "./Tooltip";
 import "./chart.css";
 
 // 데이터 그룹
@@ -24,13 +25,6 @@ interface MultiSeriesBarChartProps {
   barSpacing?: number;
 }
 
-interface Tooltip {
-  show: boolean;
-  x: number;
-  y: number;
-  content: string;
-}
-
 const TOP_PADDING = 40 as const;
 const BOTTOM_PADDING = 60 as const;
 const GRID_TEXT_DIV = 10 as const;
@@ -53,11 +47,12 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
   const animationRef = useRef<number>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [tooltip, setTooltip] = useState<Tooltip>({
+  const [tooltip, setTooltip] = useState<TooltipInfo>({
     show: false,
     x: 0,
     y: 0,
     content: "",
+    theme: tooltipTheme,
   });
   const [animationProgress, setAnimationProgress] = useState(0);
 
@@ -263,6 +258,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
             x: barX + barWidth / 2,
             y: barY,
             content: `${serie.name} - ${label}: ${value}`,
+            theme: tooltipTheme,
           });
           tooltipShown = true;
         }
@@ -286,23 +282,7 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
         onMouseLeave={handleMouseLeave}
         className="chart-canvas"
       />
-      {tooltip.show && (
-        <div
-          className="chart-tooltip"
-          style={
-            {
-              left: `${tooltip.x}px`,
-              top: `${tooltip.y}px`,
-              "--tooltip-bg-color":
-                tooltipTheme === "white" ? "white" : "black",
-              "--tooltip-text-color":
-                tooltipTheme === "white" ? "black" : "white",
-            } as React.CSSProperties
-          }
-        >
-          {tooltip.content}
-        </div>
-      )}
+      <Tooltip tooltip={tooltip} />
     </div>
   );
 };
