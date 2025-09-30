@@ -47,10 +47,51 @@ export const LineChartExample = () => {
           <LineChart
             data={chartData}
             height={300}
-            lineColor="#3b82f6"
-            pointColor="#1d4ed8"
+            lineColor="#ec4899"
+            pointColor="#be185d"
+            pointShape="triangle"
+            pointRadius={6}
+            lineWidth={3}
             tooltipTheme="dark"
           />
+
+          <div style={{ marginTop: 40 }}>
+            <h2 style={{ color: "#374151", marginBottom: 20 }}>
+              Different Point Shapes
+            </h2>
+            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+              <div style={{ flex: 1, minWidth: 300 }}>
+                <h3
+                  style={{ color: "#6b7280", fontSize: 14, marginBottom: 10 }}
+                >
+                  Circle Points
+                </h3>
+                <LineChart
+                  data={chartData.slice(0, 4)}
+                  height={200}
+                  lineColor="#3b82f6"
+                  pointColor="#1d4ed8"
+                  pointShape="circle"
+                  pointRadius={5}
+                />
+              </div>
+              <div style={{ flex: 1, minWidth: 300 }}>
+                <h3
+                  style={{ color: "#6b7280", fontSize: 14, marginBottom: 10 }}
+                >
+                  Square Points
+                </h3>
+                <LineChart
+                  data={chartData.slice(0, 4)}
+                  height={200}
+                  lineColor="#10b981"
+                  pointColor="#047857"
+                  pointShape="square"
+                  pointRadius={5}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

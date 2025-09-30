@@ -1,5 +1,5 @@
 import { useLineChart } from "../hook/useLineChart";
-import { LineChartDataPoint, LineChartConfig } from "../type";
+import { LineChartDataPoint, LineChartConfig, PointShape } from "../type";
 import { Tooltip, TooltipTheme } from "../../tooltip";
 import "../../chart.css";
 
@@ -17,6 +17,7 @@ interface LineChartProps {
   lineWidth?: number;
   pointRadius?: number;
   pointColor?: string;
+  pointShape?: PointShape;
   tooltipTheme?: TooltipTheme;
 }
 
@@ -34,6 +35,7 @@ const LineChart = ({
   lineWidth = 2,
   pointRadius = 4,
   pointColor = "#3b82f6",
+  pointShape = "circle",
   tooltipTheme = "dark",
 }: LineChartProps) => {
   const config: LineChartConfig = {
@@ -48,6 +50,7 @@ const LineChart = ({
     lineWidth,
     pointRadius,
     pointColor,
+    pointShape,
   };
 
   const {

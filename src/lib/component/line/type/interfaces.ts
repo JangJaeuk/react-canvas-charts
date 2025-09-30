@@ -1,3 +1,5 @@
+import { PointShape } from "./types";
+
 export interface LineChartConfig {
   sidePadding: number;
   chartPadding: number;
@@ -10,4 +12,5 @@ export interface LineChartConfig {
   lineWidth: number;
   pointRadius: number;
   pointColor: string;
+  pointShape: PointShape;
 }
