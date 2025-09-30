@@ -1,3 +1,4 @@
+import React from "react";
 import { MultiSeriesBarChart } from "../lib";
 
 const chartData = {
@@ -16,7 +17,7 @@ const chartData = {
   ],
 };
 
-function MultiSeriesBarChartExample() {
+export const MultiSeriesBarChartExample = () => {
   return (
     <div
       style={{
@@ -62,6 +63,4 @@ function MultiSeriesBarChartExample() {
       </div>
     </div>
   );
-}
-
-export default MultiSeriesBarChartExample;
+};

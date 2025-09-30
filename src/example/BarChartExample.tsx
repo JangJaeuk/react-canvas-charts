@@ -1,3 +1,4 @@
+import React from "react";
 import { BarChart } from "../lib";
 
 const sampleData = [
@@ -9,7 +10,7 @@ const sampleData = [
   { label: "Jun", value: 95, color: "#ef4444" },
 ];
 
-function BarChartExample() {
+export const BarChartExample = () => {
   return (
     <div
       style={{
@@ -46,6 +47,4 @@ function BarChartExample() {
       </div>
     </div>
   );
-}
-
-export default BarChartExample;
+};

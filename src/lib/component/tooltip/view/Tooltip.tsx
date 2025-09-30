@@ -1,21 +1,11 @@
-import React from "react";
-import "./chart.css";
-
-export type TooltipTheme = "white" | "dark";
-
-export interface TooltipInfo {
-  show: boolean;
-  x: number;
-  y: number;
-  content: string;
-  theme: TooltipTheme;
-}
+import { TooltipInfo } from "../type/types";
+import "../../chart.css";
 
 interface TooltipProps {
   tooltip: TooltipInfo;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ tooltip }) => {
+export const Tooltip = ({ tooltip }: TooltipProps) => {
   if (!tooltip.show) return null;
 
   return (
@@ -34,5 +24,3 @@ const Tooltip: React.FC<TooltipProps> = ({ tooltip }) => {
     </div>
   );
 };
-
-export default Tooltip;
