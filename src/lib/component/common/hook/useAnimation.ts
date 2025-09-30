@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export const useAnimation = (duration: number = 1000) => {
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const [animationProgress, setAnimationProgress] = useState(0);
 
   const animate = (timestamp: number) => {
