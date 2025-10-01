@@ -17,7 +17,6 @@ export const BarChartExample = () => {
       barWidth={50}
       chartPadding={40}
       height={350}
-      axisColor="#2563eb"
       gridColor="#e5e7eb"
       labelTextColor="#374151"
       gridTextColor="#6b7280"

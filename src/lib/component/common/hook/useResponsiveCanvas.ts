@@ -56,6 +56,7 @@ export const useResponsiveCanvas = ({
       if (ctx) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(dpr * scale, dpr * scale);
+
         onDraw(ctx, drawWidth, drawHeight);
       }
     };

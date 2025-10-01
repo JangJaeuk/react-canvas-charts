@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { BarChartExample } from "./BarChartExample";
 import { MultiSeriesBarChartExample } from "./MultiSeriesBarChartExample";
 import { LineChartExample } from "./LineChartExample";
+import { PieChartExample } from "./PieChartExample";
 
-type ChartType = "bar" | "multiSeries" | "line";
+type ChartType = "bar" | "multiSeries" | "line" | "pie";
 
 export const ExamplesDashboard = () => {
   const [activeChart, setActiveChart] = useState<ChartType>("bar");
@@ -16,6 +17,7 @@ export const ExamplesDashboard = () => {
       label: "Line Chart & Point Shapes",
       icon: "📉",
     },
+    { key: "pie" as ChartType, label: "Pie Chart", icon: "🥧" },
   ];
 
   const renderChart = () => {
@@ -77,6 +79,26 @@ export const ExamplesDashboard = () => {
               }}
             >
               <LineChartExample />
+            </div>
+          </div>
+        );
+
+      case "pie":
+        return (
+          <div>
+            <h2 style={{ color: "#374151", marginBottom: 20, fontSize: 24 }}>
+              🥧 Interactive Pie Chart
+            </h2>
+            <p style={{ color: "#6b7280", marginBottom: 30 }}>
+              비율 데이터를 시각화하는 파이 차트입니다. 각 섹션에 마우스를
+              올려보세요. 라벨 표시 옵션과 다양한 스타일링을 지원합니다.
+            </p>
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <PieChartExample />
             </div>
           </div>
         );
