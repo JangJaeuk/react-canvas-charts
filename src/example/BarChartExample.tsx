@@ -12,39 +12,16 @@ const sampleData = [
 
 export const BarChartExample = () => {
   return (
-    <div
-      style={{
-        height: "100vh",
-        backgroundColor: "#f9fafb",
-        padding: 20,
-      }}
-    >
-      <h1
-        style={{
-          fontWeight: "bold",
-          color: "#1f2937",
-        }}
-      >
-        Interactive Bar Chart
-      </h1>
-      <div
-        style={{
-          backgroundColor: "#fff",
-          padding: 20,
-          borderRadius: 16,
-          marginTop: 20,
-          boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-          maxWidth: 800,
-        }}
-      >
-        <BarChart
-          data={sampleData}
-          barWidth={40}
-          chartPadding={40}
-          height={300}
-        />
-      </div>
-    </div>
+    <BarChart
+      data={sampleData}
+      barWidth={50}
+      chartPadding={40}
+      height={350}
+      axisColor="#2563eb"
+      gridColor="#e5e7eb"
+      labelTextColor="#374151"
+      gridTextColor="#6b7280"
+      tooltipTheme="dark"
+    />
   );
 };

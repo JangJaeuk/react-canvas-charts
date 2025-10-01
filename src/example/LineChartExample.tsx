@@ -11,86 +11,119 @@ const chartData = [
   { label: "Jul", value: 102 },
 ];
 
+const shortData = chartData.slice(0, 5);
+
 export const LineChartExample = () => {
   return (
-    <div
-      style={{
-        height: "100vh",
-        backgroundColor: "#f9fafb",
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1000,
-          margin: "0 auto",
-        }}
-      >
-        <h1
+    <div>
+      {/* 메인 라인 차트 */}
+      <div style={{ marginBottom: 40 }}>
+        <LineChart
+          data={chartData}
+          height={350}
+          lineColor="#ec4899"
+          pointColor="#be185d"
+          pointShape="triangle"
+          pointRadius={6}
+          lineWidth={3}
+          tooltipTheme="dark"
+        />
+      </div>
+
+      {/* 포인트 모양 비교 섹션 */}
+      <div>
+        <h3
           style={{
-            fontWeight: "bold",
-            color: "#1f2937",
+            color: "#374151",
+            fontSize: 18,
+            marginBottom: 20,
+            textAlign: "center",
           }}
         >
-          Interactive Line Chart
-        </h1>
+          🔸 Different Point Shapes
+        </h3>
+        <p
+          style={{
+            color: "#6b7280",
+            fontSize: 14,
+            marginBottom: 25,
+            textAlign: "center",
+          }}
+        >
+          라인 차트의 포인트를 원형, 삼각형, 사각형으로 변경할 수 있습니다.
+        </p>
+
         <div
           style={{
-            backgroundColor: "#fff",
-            padding: 20,
-            borderRadius: 16,
-            marginTop: 20,
-            boxShadow:
-              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: 25,
           }}
         >
-          <LineChart
-            data={chartData}
-            height={300}
-            lineColor="#ec4899"
-            pointColor="#be185d"
-            pointShape="triangle"
-            pointRadius={6}
-            lineWidth={3}
-            tooltipTheme="dark"
-          />
+          <div>
+            <h4
+              style={{
+                color: "#374151",
+                fontSize: 14,
+                marginBottom: 12,
+                textAlign: "center",
+              }}
+            >
+              🔵 Circle Points
+            </h4>
+            <LineChart
+              data={shortData}
+              height={200}
+              lineColor="#3b82f6"
+              pointColor="#1d4ed8"
+              pointShape="circle"
+              pointRadius={5}
+              lineWidth={2}
+            />
+          </div>
 
-          <div style={{ marginTop: 40 }}>
-            <h2 style={{ color: "#374151", marginBottom: 20 }}>
-              Different Point Shapes
-            </h2>
-            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-              <div style={{ flex: 1, minWidth: 300 }}>
-                <h3
-                  style={{ color: "#6b7280", fontSize: 14, marginBottom: 10 }}
-                >
-                  Circle Points
-                </h3>
-                <LineChart
-                  data={chartData.slice(0, 4)}
-                  height={200}
-                  lineColor="#3b82f6"
-                  pointColor="#1d4ed8"
-                  pointShape="circle"
-                  pointRadius={5}
-                />
-              </div>
-              <div style={{ flex: 1, minWidth: 300 }}>
-                <h3
-                  style={{ color: "#6b7280", fontSize: 14, marginBottom: 10 }}
-                >
-                  Square Points
-                </h3>
-                <LineChart
-                  data={chartData.slice(0, 4)}
-                  height={200}
-                  lineColor="#10b981"
-                  pointColor="#047857"
-                  pointShape="square"
-                  pointRadius={5}
-                />
-              </div>
-            </div>
+          <div>
+            <h4
+              style={{
+                color: "#374151",
+                fontSize: 14,
+                marginBottom: 12,
+                textAlign: "center",
+              }}
+            >
+              🔺 Triangle Points
+            </h4>
+            <LineChart
+              data={shortData}
+              height={200}
+              lineColor="#ec4899"
+              pointColor="#be185d"
+              pointShape="triangle"
+              pointRadius={5}
+              lineWidth={2}
+            />
+          </div>
+
+          <div>
+            <h4
+              style={{
+                color: "#374151",
+                fontSize: 14,
+                marginBottom: 12,
+                textAlign: "center",
+              }}
+            >
+              🔷 Square Points
+            </h4>
+            <LineChart
+              data={shortData}
+              height={200}
+              lineColor="#10b981"
+              pointColor="#047857"
+              pointShape="square"
+              pointRadius={5}
+              lineWidth={2}
+            />
           </div>
         </div>
       </div>
