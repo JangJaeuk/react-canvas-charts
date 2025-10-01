@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useCallback } from "react";
 import {
   LineChartDataPoint,
   LineChartConfig,
@@ -7,6 +7,7 @@ import {
   BOTTOM_PADDING,
   GRID_TEXT_DIV,
 } from "../type";
+import { useResponsiveCanvas } from "../../common";
 
 // 포인트 모양별 그리기 함수들 (컴포넌트 외부로 이동)
 const drawCircle = (
@@ -72,9 +73,6 @@ export const useCanvasRenderer = (
   config: LineChartConfig,
   easedProgress: number
 ) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const drawChart = useCallback(
     (ctx: CanvasRenderingContext2D, width: number, height: number) => {
       const {
@@ -175,34 +173,11 @@ export const useCanvasRenderer = (
     [data, config, easedProgress]
   );
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-
-      canvas.width = rect.width * dpr;
-      canvas.height = config.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${config.height}px`;
-
-      ctx.scale(dpr, dpr);
-      drawChart(ctx, rect.width, config.height);
-    };
-
-    resizeCanvas();
-
-    const resizeObserver = new ResizeObserver(resizeCanvas);
-    resizeObserver.observe(container);
-
-    return () => resizeObserver.disconnect();
-  }, [data, config, easedProgress, drawChart]);
+  const { canvasRef, containerRef } = useResponsiveCanvas({
+    height: config.height,
+    onDraw: drawChart,
+    dependencies: [data, config, easedProgress, drawChart],
+  });
 
   return { canvasRef, containerRef };
 };

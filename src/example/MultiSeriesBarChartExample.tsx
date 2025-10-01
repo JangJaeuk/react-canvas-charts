@@ -22,7 +22,7 @@ export const MultiSeriesBarChartExample = () => {
     <MultiSeriesBarChart
       labels={chartData.labels}
       series={chartData.series}
-      barWidth={40}
+      barWidth={30}
       chartPadding={40}
       height={350}
       tooltipTheme="dark"

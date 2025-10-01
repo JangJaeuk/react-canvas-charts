@@ -33,9 +33,6 @@ export const ExamplesDashboard = () => {
             <div
               style={{
                 backgroundColor: "#ffffff",
-                padding: 30,
-                borderRadius: 12,
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
               }}
             >
               <BarChartExample />
@@ -56,9 +53,6 @@ export const ExamplesDashboard = () => {
             <div
               style={{
                 backgroundColor: "#ffffff",
-                padding: 30,
-                borderRadius: 12,
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
               }}
             >
               <MultiSeriesBarChartExample />
@@ -80,9 +74,6 @@ export const ExamplesDashboard = () => {
             <div
               style={{
                 backgroundColor: "#ffffff",
-                padding: 30,
-                borderRadius: 12,
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
               }}
             >
               <LineChartExample />
@@ -189,7 +180,6 @@ export const ExamplesDashboard = () => {
             borderRadius: 16,
             boxShadow:
               "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-            minHeight: 500,
           }}
         >
           {renderChart()}
