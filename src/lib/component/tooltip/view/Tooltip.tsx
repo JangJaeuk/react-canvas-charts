@@ -20,7 +20,7 @@ export const Tooltip = ({ tooltip }: TooltipProps) => {
         } as React.CSSProperties
       }
     >
-      {tooltip.content}
+      <div dangerouslySetInnerHTML={{ __html: tooltip.content }} />
     </div>
   );
 };

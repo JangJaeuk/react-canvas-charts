@@ -3,8 +3,10 @@ import { BarChartExample } from "./BarChartExample";
 import { MultiSeriesBarChartExample } from "./MultiSeriesBarChartExample";
 import { LineChartExample } from "./LineChartExample";
 import { PieChartExample } from "./PieChartExample";
+import { AreaChartExample } from "./AreaChartExample";
+import { SingleAreaChartExample } from "./SingleAreaChartExample";
 
-type ChartType = "bar" | "multiSeries" | "line" | "pie";
+type ChartType = "bar" | "multiSeries" | "line" | "pie" | "area";
 
 export const ExamplesDashboard = () => {
   const [activeChart, setActiveChart] = useState<ChartType>("bar");
@@ -17,6 +19,7 @@ export const ExamplesDashboard = () => {
       label: "Line Chart & Point Shapes",
       icon: "📉",
     },
+    { key: "area" as ChartType, label: "Area Chart", icon: "🏔️" },
     { key: "pie" as ChartType, label: "Pie Chart", icon: "🥧" },
   ];
 
@@ -79,6 +82,38 @@ export const ExamplesDashboard = () => {
               }}
             >
               <LineChartExample />
+            </div>
+          </div>
+        );
+
+      case "area":
+        return (
+          <div>
+            <h2 style={{ color: "#374151", marginBottom: 20, fontSize: 24 }}>
+              🏔️ Interactive Area Chart
+            </h2>
+            <p style={{ color: "#6b7280", marginBottom: 30 }}>
+              스택형 영역 차트로 여러 데이터 시리즈를 누적하여 표시합니다. 각
+              시리즈의 기여도와 전체 합계를 한눈에 파악할 수 있습니다.
+            </p>
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <AreaChartExample />
+            </div>
+
+            {/* 단일 시리즈 예제 추가 */}
+            <div
+              style={{
+                marginTop: 40,
+                padding: 20,
+                backgroundColor: "#f8fafc",
+                borderRadius: 12,
+              }}
+            >
+              <SingleAreaChartExample />
             </div>
           </div>
         );
