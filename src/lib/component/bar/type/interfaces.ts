@@ -7,4 +7,5 @@ export interface BarChartConfig {
   gridColor: string;
   labelTextColor: string;
   gridTextColor: string;
+  barSpacing: number;
 }

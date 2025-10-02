@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import {
-  BarChartDataPoint,
+  BarChartSeries,
   BarChartConfig,
   TOP_PADDING,
   BOTTOM_PADDING,
@@ -9,7 +9,8 @@ import {
 import { useResponsiveCanvas } from "../../common";
 
 export const useCanvasRenderer = (
-  data: BarChartDataPoint[],
+  labels: string[],
+  series: BarChartSeries[],
   config: BarChartConfig,
   easedProgress: number
 ) => {
@@ -23,17 +24,21 @@ export const useCanvasRenderer = (
         gridColor,
         labelTextColor,
         gridTextColor,
+        barSpacing,
       } = config;
 
       ctx.clearRect(0, 0, width, height);
 
       const chartWidth = width - sidePadding * 2;
       const chartHeight = height - (TOP_PADDING + BOTTOM_PADDING);
-      const maxValue = Math.max(...data.map((d) => d.value));
 
+      const maxValue = Math.max(...series.flatMap((s) => s.data));
+
+      const groupWidth =
+        barWidth * series.length + barSpacing * (series.length - 1);
       const availableWidth = chartWidth - chartPadding * 2;
-      const totalBarsWidth = barWidth * data.length;
-      const spacing = (availableWidth - totalBarsWidth) / (data.length - 1);
+      const spacing =
+        (availableWidth - groupWidth * labels.length) / (labels.length - 1);
 
       // 축 그리기
       ctx.beginPath();
@@ -44,63 +49,87 @@ export const useCanvasRenderer = (
       ctx.lineTo(width - sidePadding, height - BOTTOM_PADDING);
       ctx.stroke();
 
-      // 그리드 및 그리드 텍스트 그리기
-      const gridLines = 5;
-      ctx.strokeStyle = gridColor;
-      for (let i = 0; i <= gridLines; i++) {
-        const y = TOP_PADDING + (chartHeight * i) / gridLines;
+      // 격자 그리기
+      const gridSteps = GRID_TEXT_DIV;
+      for (let i = 0; i <= gridSteps; i++) {
+        const y = TOP_PADDING + (chartHeight / gridSteps) * i;
+        const value = maxValue - (maxValue / gridSteps) * i;
+
         ctx.beginPath();
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = 1;
         ctx.moveTo(sidePadding, y);
         ctx.lineTo(width - sidePadding, y);
         ctx.stroke();
 
-        const value = Math.round(maxValue - (maxValue * i) / gridLines);
+        // Y축 라벨
         ctx.fillStyle = gridTextColor;
-        ctx.font = "12px Inter, sans-serif";
+        ctx.font = "12px Arial";
         ctx.textAlign = "right";
-        ctx.fillText(value.toString(), sidePadding - GRID_TEXT_DIV, y + 4);
+        ctx.fillText(Math.round(value).toString(), sidePadding - 10, y + 4);
       }
 
       // 바 그리기
-      data.forEach((item, index) => {
-        const x = sidePadding + chartPadding + (barWidth + spacing) * index;
-        const barHeight = (item.value / maxValue) * chartHeight;
-        const animatedHeight = barHeight * easedProgress;
-        const y = height - BOTTOM_PADDING - animatedHeight;
+      labels.forEach((label, labelIndex) => {
+        const groupX =
+          sidePadding + chartPadding + (groupWidth + spacing) * labelIndex;
 
-        ctx.beginPath();
-        const radius = 4;
-        ctx.moveTo(x, y + radius);
-        ctx.lineTo(x, y + animatedHeight);
-        ctx.lineTo(x + barWidth, y + animatedHeight);
-        ctx.lineTo(x + barWidth, y + radius);
-        ctx.quadraticCurveTo(x + barWidth, y, x + barWidth - radius, y);
-        ctx.lineTo(x + radius, y);
-        ctx.quadraticCurveTo(x, y, x, y + radius);
-        ctx.fillStyle = item.color;
-        ctx.fill();
+        series.forEach((s, seriesIndex) => {
+          const value = s.data[labelIndex];
+          const barX = groupX + seriesIndex * (barWidth + barSpacing);
+          const barHeight = (value / maxValue) * chartHeight * easedProgress;
+          const barY = height - BOTTOM_PADDING - barHeight;
 
+          // 바 그리기 (둥근 모서리)
+          ctx.beginPath();
+          const radius = 4;
+          ctx.moveTo(barX + radius, barY);
+          ctx.lineTo(barX + barWidth - radius, barY);
+          ctx.quadraticCurveTo(
+            barX + barWidth,
+            barY,
+            barX + barWidth,
+            barY + radius
+          );
+          ctx.lineTo(barX + barWidth, barY + barHeight - radius);
+          ctx.quadraticCurveTo(
+            barX + barWidth,
+            barY + barHeight,
+            barX + barWidth - radius,
+            barY + barHeight
+          );
+          ctx.lineTo(barX + radius, barY + barHeight);
+          ctx.quadraticCurveTo(
+            barX,
+            barY + barHeight,
+            barX,
+            barY + barHeight - radius
+          );
+          ctx.lineTo(barX, barY + radius);
+          ctx.quadraticCurveTo(barX, barY, barX + radius, barY);
+          ctx.fillStyle = s.color;
+          ctx.fill();
+        });
+
+        // X축 라벨
         ctx.fillStyle = labelTextColor;
-        ctx.font = "12px Inter, sans-serif";
+        ctx.font = "12px Arial";
         ctx.textAlign = "center";
         ctx.fillText(
-          item.label,
-          x + barWidth / 2,
-          height - BOTTOM_PADDING + 24
+          label,
+          groupX + groupWidth / 2,
+          height - BOTTOM_PADDING + 20
         );
       });
     },
-    [data, config, easedProgress]
+    [labels, series, config, easedProgress]
   );
 
   const { canvasRef, containerRef } = useResponsiveCanvas({
     height: config.height,
     onDraw: drawChart,
-    dependencies: [data, config, easedProgress, drawChart],
+    dependencies: [labels, series, config, easedProgress, drawChart],
   });
 
-  return {
-    canvasRef,
-    containerRef,
-  };
+  return { canvasRef, containerRef };
 };

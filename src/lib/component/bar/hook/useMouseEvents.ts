@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  BarChartDataPoint,
-  BarChartConfig,
-  TOP_PADDING,
-  BOTTOM_PADDING,
-} from "../type";
+import { BarChartSeries, BarChartConfig } from "../type";
 
 export const useMouseEvents = (
-  data: BarChartDataPoint[],
+  labels: string[],
+  series: BarChartSeries[],
   config: BarChartConfig,
   showTooltip: (x: number, y: number, content: string) => void,
   hideTooltip: () => void
@@ -15,36 +11,56 @@ export const useMouseEvents = (
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = e.currentTarget;
     const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    const { barWidth, sidePadding, chartPadding } = config;
+    const { barWidth, sidePadding, chartPadding, barSpacing } = config;
     const chartWidth = rect.width - sidePadding * 2;
     const availableWidth = chartWidth - chartPadding * 2;
-    const totalBarsWidth = barWidth * data.length;
-    const spacing = (availableWidth - totalBarsWidth) / (data.length - 1);
+    const groupWidth =
+      barWidth * series.length + barSpacing * (series.length - 1);
+    const spacing =
+      (availableWidth - groupWidth * labels.length) / (labels.length - 1);
 
-    let tooltipShown = false;
+    // 가장 가까운 그룹 찾기
+    let closestIndex = -1;
+    let minDistance = Infinity;
 
-    data.forEach((item, index) => {
-      const barX = sidePadding + chartPadding + (barWidth + spacing) * index;
-      const maxValue = Math.max(...data.map((d) => d.value));
-      const chartHeight = rect.height - (TOP_PADDING + BOTTOM_PADDING);
-      const barHeight = (item.value / maxValue) * chartHeight;
-      const barY = rect.height - BOTTOM_PADDING - barHeight;
+    labels.forEach((_, index) => {
+      const groupX =
+        sidePadding + chartPadding + (groupWidth + spacing) * index;
+      const groupCenterX = groupX + groupWidth / 2;
+      const distance = Math.abs(x - groupCenterX);
 
-      if (
-        mouseX >= barX &&
-        mouseX <= barX + barWidth &&
-        mouseY >= barY &&
-        mouseY <= barY + barHeight
-      ) {
-        showTooltip(barX + barWidth / 2, barY, `${item.label}: ${item.value}`);
-        tooltipShown = true;
+      if (distance < minDistance && distance < groupWidth / 2) {
+        minDistance = distance;
+        closestIndex = index;
       }
     });
 
-    if (!tooltipShown) {
+    if (closestIndex !== -1) {
+      const label = labels[closestIndex];
+      const groupX =
+        sidePadding + chartPadding + (groupWidth + spacing) * closestIndex;
+      const groupCenterX = groupX + groupWidth / 2;
+
+      // 모든 시리즈의 값과 총합 계산
+      let tooltipContent = `<strong>${label}</strong><br/>`;
+      let total = 0;
+
+      series.forEach((s, index) => {
+        const value = s.data[closestIndex];
+        total += value;
+        tooltipContent += `${s.name}: ${value}`;
+        if (index < series.length - 1) {
+          tooltipContent += "<br/>";
+        }
+      });
+
+      tooltipContent += `<br/><strong>Total: ${total}</strong>`;
+
+      showTooltip(groupCenterX, y - 10, tooltipContent);
+    } else {
       hideTooltip();
     }
   };
@@ -53,8 +69,5 @@ export const useMouseEvents = (
     hideTooltip();
   };
 
-  return {
-    handleMouseMove,
-    handleMouseLeave,
-  };
+  return { handleMouseMove, handleMouseLeave };
 };

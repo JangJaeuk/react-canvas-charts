@@ -1,5 +1,5 @@
 import React from "react";
-import { MultiSeriesBarChart } from "../lib";
+import { BarChart } from "../lib";
 
 const chartData = {
   labels: ["Jan", "Feb", "Mar", "Apr", "May"],
@@ -19,7 +19,7 @@ const chartData = {
 
 export const MultiSeriesBarChartExample = () => {
   return (
-    <MultiSeriesBarChart
+    <BarChart
       labels={chartData.labels}
       series={chartData.series}
       barWidth={30}

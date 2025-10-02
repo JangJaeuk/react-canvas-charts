@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import {
-  LineChartDataPoint,
+  LineChartSeries,
   LineChartConfig,
   PointShape,
   TOP_PADDING,
@@ -9,7 +9,7 @@ import {
 } from "../type";
 import { useResponsiveCanvas } from "../../common";
 
-// 포인트 모양별 그리기 함수들 (컴포넌트 외부로 이동)
+// 포인트 모양별 그리기 함수들
 const drawCircle = (
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -42,7 +42,7 @@ const drawSquare = (
   y: number,
   radius: number
 ) => {
-  const size = radius * 1.4; // 원과 비슷한 크기로 조정
+  const size = radius * 1.4;
   ctx.beginPath();
   ctx.rect(x - size / 2, y - size / 2, size, size);
   ctx.fill();
@@ -69,7 +69,8 @@ const drawPoint = (
 };
 
 export const useCanvasRenderer = (
-  data: LineChartDataPoint[],
+  labels: string[],
+  series: LineChartSeries[],
   config: LineChartConfig,
   easedProgress: number
 ) => {
@@ -82,21 +83,23 @@ export const useCanvasRenderer = (
         gridColor,
         labelTextColor,
         gridTextColor,
-        lineColor,
         lineWidth,
         pointRadius,
-        pointColor,
         pointShape,
+        showPoints,
+        showLines,
       } = config;
 
       ctx.clearRect(0, 0, width, height);
 
       const chartWidth = width - sidePadding * 2;
       const chartHeight = height - (TOP_PADDING + BOTTOM_PADDING);
-      const maxValue = Math.max(...data.map((d) => d.value));
+
+      // 최대값 계산 (모든 시리즈의 최대값)
+      const maxValue = Math.max(...series.flatMap((s) => s.data));
 
       const availableWidth = chartWidth - chartPadding * 2;
-      const pointSpacing = availableWidth / (data.length - 1);
+      const pointSpacing = availableWidth / (labels.length - 1);
 
       // 축 그리기
       ctx.beginPath();
@@ -127,56 +130,68 @@ export const useCanvasRenderer = (
         ctx.fillText(Math.round(value).toString(), sidePadding - 10, y + 4);
       }
 
-      // 라인 그리기
-      if (data.length > 1) {
-        ctx.beginPath();
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = lineWidth;
-        ctx.lineJoin = "round";
-        ctx.lineCap = "round";
+      // 각 시리즈별로 라인과 포인트 그리기
+      series.forEach((currentSeries) => {
+        // 라인 그리기
+        if (showLines && labels.length > 1) {
+          ctx.beginPath();
+          ctx.strokeStyle = currentSeries.color;
+          ctx.lineWidth = lineWidth;
+          ctx.lineJoin = "round";
+          ctx.lineCap = "round";
 
-        data.forEach((point, index) => {
-          const x = sidePadding + chartPadding + pointSpacing * index;
-          const y =
-            height -
-            BOTTOM_PADDING -
-            (point.value / maxValue) * chartHeight * easedProgress;
+          labels.forEach((_, labelIndex) => {
+            const x = sidePadding + chartPadding + pointSpacing * labelIndex;
+            const y =
+              height -
+              BOTTOM_PADDING -
+              (currentSeries.data[labelIndex] / maxValue) *
+                chartHeight *
+                easedProgress;
 
-          if (index === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        });
-        ctx.stroke();
-      }
+            if (labelIndex === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          });
+          ctx.stroke();
+        }
 
-      // 포인트 그리기
-      data.forEach((point, index) => {
+        // 포인트 그리기
+        if (showPoints) {
+          ctx.fillStyle = currentSeries.color;
+
+          labels.forEach((_, labelIndex) => {
+            const x = sidePadding + chartPadding + pointSpacing * labelIndex;
+            const y =
+              height -
+              BOTTOM_PADDING -
+              (currentSeries.data[labelIndex] / maxValue) *
+                chartHeight *
+                easedProgress;
+
+            drawPoint(ctx, x, y, pointRadius, pointShape);
+          });
+        }
+      });
+
+      // X축 라벨 그리기
+      labels.forEach((label, index) => {
         const x = sidePadding + chartPadding + pointSpacing * index;
-        const y =
-          height -
-          BOTTOM_PADDING -
-          (point.value / maxValue) * chartHeight * easedProgress;
-
-        // 포인트 모양별 그리기
-        ctx.fillStyle = pointColor;
-        drawPoint(ctx, x, y, pointRadius, pointShape);
-
-        // X축 라벨
         ctx.fillStyle = labelTextColor;
         ctx.font = "12px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(point.label, x, height - BOTTOM_PADDING + 20);
+        ctx.fillText(label, x, height - BOTTOM_PADDING + 20);
       });
     },
-    [data, config, easedProgress]
+    [labels, series, config, easedProgress]
   );
 
   const { canvasRef, containerRef } = useResponsiveCanvas({
     height: config.height,
     onDraw: drawChart,
-    dependencies: [data, config, easedProgress, drawChart],
+    dependencies: [labels, series, config, easedProgress, drawChart],
   });
 
   return { canvasRef, containerRef };

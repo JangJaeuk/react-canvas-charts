@@ -1,10 +1,11 @@
 import { useLineChart } from "../hook/useLineChart";
-import { LineChartDataPoint, LineChartConfig, PointShape } from "../type";
+import { LineChartSeries, LineChartConfig, PointShape } from "../type";
 import { Tooltip, TooltipTheme } from "../../tooltip";
 import "../../chart.css";
 
 interface LineChartProps {
-  data: LineChartDataPoint[];
+  labels: string[];
+  series: LineChartSeries[];
   className?: string;
   sidePadding?: number;
   chartPadding?: number;
@@ -13,16 +14,17 @@ interface LineChartProps {
   gridColor?: string;
   labelTextColor?: string;
   gridTextColor?: string;
-  lineColor?: string;
   lineWidth?: number;
   pointRadius?: number;
-  pointColor?: string;
   pointShape?: PointShape;
+  showPoints?: boolean;
+  showLines?: boolean;
   tooltipTheme?: TooltipTheme;
 }
 
 const LineChart = ({
-  data,
+  labels,
+  series,
   className = "",
   sidePadding = 40,
   chartPadding = 40,
@@ -31,11 +33,11 @@ const LineChart = ({
   gridColor = "#f3f4f6",
   labelTextColor = "#6b7280",
   gridTextColor = "#6b7280",
-  lineColor = "#3b82f6",
   lineWidth = 2,
   pointRadius = 4,
-  pointColor = "#3b82f6",
   pointShape = "circle",
+  showPoints = true,
+  showLines = true,
   tooltipTheme = "dark",
 }: LineChartProps) => {
   const config: LineChartConfig = {
@@ -46,11 +48,11 @@ const LineChart = ({
     gridColor,
     labelTextColor,
     gridTextColor,
-    lineColor,
     lineWidth,
     pointRadius,
-    pointColor,
     pointShape,
+    showPoints,
+    showLines,
   };
 
   const {
@@ -59,7 +61,7 @@ const LineChart = ({
     tooltip,
     handleMouseMove,
     handleMouseLeave,
-  } = useLineChart(data, config, tooltipTheme);
+  } = useLineChart(labels, series, config, tooltipTheme);
 
   return (
     <div ref={containerRef} className={`chart-container ${className}`}>

@@ -1,31 +1,84 @@
 import React from "react";
 import { LineChart } from "../lib";
 
-const chartData = [
-  { label: "Jan", value: 65 },
-  { label: "Feb", value: 78 },
-  { label: "Mar", value: 90 },
-  { label: "Apr", value: 81 },
-  { label: "May", value: 95 },
-  { label: "Jun", value: 88 },
-  { label: "Jul", value: 102 },
+const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+
+// 단일 시리즈 예제 (기존 LineChart와 동일한 사용법)
+const singleSeries = [
+  {
+    name: "Sales",
+    color: "#ec4899",
+    data: [65, 78, 90, 81, 95, 88, 102],
+  },
 ];
 
-const shortData = chartData.slice(0, 5);
+// 다중 시리즈 예제
+const multiSeries = [
+  {
+    name: "Q1 Sales",
+    color: "#3b82f6",
+    data: [65, 78, 90],
+  },
+  {
+    name: "Q2 Sales",
+    color: "#10b981",
+    data: [81, 95, 88],
+  },
+];
+
+const shortLabels = labels.slice(0, 5);
+const shortSingleSeries = [
+  {
+    name: "Sales",
+    color: "#3b82f6",
+    data: [65, 78, 90, 81, 95],
+  },
+];
 
 export const LineChartExample = () => {
   return (
     <div>
-      {/* 메인 라인 차트 */}
+      {/* 단일 시리즈 차트 */}
       <div style={{ marginBottom: 40 }}>
+        <h3
+          style={{
+            color: "#374151",
+            fontSize: 18,
+            marginBottom: 20,
+            textAlign: "center",
+          }}
+        >
+          📊 Single Series Line Chart
+        </h3>
         <LineChart
-          data={chartData}
+          labels={labels}
+          series={singleSeries}
           height={350}
-          lineColor="#ec4899"
-          pointColor="#be185d"
           pointShape="triangle"
           pointRadius={6}
           lineWidth={3}
+          tooltipTheme="dark"
+        />
+      </div>
+
+      {/* 다중 시리즈 차트 */}
+      <div style={{ marginBottom: 40 }}>
+        <h3
+          style={{
+            color: "#374151",
+            fontSize: 18,
+            marginBottom: 20,
+            textAlign: "center",
+          }}
+        >
+          📈 Multi-Series Line Chart
+        </h3>
+        <LineChart
+          labels={labels.slice(0, 3)}
+          series={multiSeries}
+          height={300}
+          pointRadius={5}
+          lineWidth={2}
           tooltipTheme="dark"
         />
       </div>
@@ -72,10 +125,9 @@ export const LineChartExample = () => {
               🔵 Circle Points
             </h4>
             <LineChart
-              data={shortData}
+              labels={shortLabels}
+              series={shortSingleSeries}
               height={200}
-              lineColor="#3b82f6"
-              pointColor="#1d4ed8"
               pointShape="circle"
               pointRadius={5}
               lineWidth={2}
@@ -94,10 +146,9 @@ export const LineChartExample = () => {
               🔺 Triangle Points
             </h4>
             <LineChart
-              data={shortData}
+              labels={shortLabels}
+              series={shortSingleSeries}
               height={200}
-              lineColor="#ec4899"
-              pointColor="#be185d"
               pointShape="triangle"
               pointRadius={5}
               lineWidth={2}
@@ -116,10 +167,9 @@ export const LineChartExample = () => {
               🔷 Square Points
             </h4>
             <LineChart
-              data={shortData}
+              labels={shortLabels}
+              series={shortSingleSeries}
               height={200}
-              lineColor="#10b981"
-              pointColor="#047857"
               pointShape="square"
               pointRadius={5}
               lineWidth={2}

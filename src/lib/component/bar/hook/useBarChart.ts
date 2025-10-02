@@ -1,22 +1,27 @@
-import { BarChartDataPoint, BarChartConfig } from "../type";
+import { BarChartSeries, BarChartConfig } from "../type";
 import { useAnimation, useTooltip } from "../../common";
 import { useCanvasRenderer } from "./useCanvasRenderer";
 import { useMouseEvents } from "./useMouseEvents";
 
 export const useBarChart = (
-  data: BarChartDataPoint[],
+  labels: string[],
+  series: BarChartSeries[],
   config: BarChartConfig,
   tooltipTheme: "dark" | "white" = "dark"
 ) => {
   const { easedProgress } = useAnimation();
   const { tooltip, showTooltip, hideTooltip } = useTooltip(tooltipTheme);
+
   const { canvasRef, containerRef } = useCanvasRenderer(
-    data,
+    labels,
+    series,
     config,
     easedProgress
   );
+
   const { handleMouseMove, handleMouseLeave } = useMouseEvents(
-    data,
+    labels,
+    series,
     config,
     showTooltip,
     hideTooltip

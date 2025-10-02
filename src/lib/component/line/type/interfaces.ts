@@ -8,9 +8,9 @@ export interface LineChartConfig {
   gridColor: string;
   labelTextColor: string;
   gridTextColor: string;
-  lineColor: string;
   lineWidth: number;
   pointRadius: number;
-  pointColor: string;
   pointShape: PointShape;
+  showPoints: boolean;
+  showLines: boolean;
 }

@@ -1,5 +1,5 @@
-export interface BarChartDataPoint {
-  label: string;
-  value: number;
+export interface BarChartSeries {
+  name: string;
   color: string;
+  data: number[];
 }

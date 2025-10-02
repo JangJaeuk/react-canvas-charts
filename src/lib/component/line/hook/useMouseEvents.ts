@@ -1,8 +1,9 @@
 import React from "react";
-import { LineChartDataPoint, LineChartConfig } from "../type";
+import { LineChartSeries, LineChartConfig } from "../type";
 
 export const useMouseEvents = (
-  data: LineChartDataPoint[],
+  labels: string[],
+  series: LineChartSeries[],
   config: LineChartConfig,
   showTooltip: (x: number, y: number, content: string) => void,
   hideTooltip: () => void
@@ -16,13 +17,13 @@ export const useMouseEvents = (
     const { sidePadding, chartPadding } = config;
     const chartWidth = rect.width - sidePadding * 2;
     const availableWidth = chartWidth - chartPadding * 2;
-    const pointSpacing = availableWidth / (data.length - 1);
+    const pointSpacing = availableWidth / (labels.length - 1);
 
     // 가장 가까운 포인트 찾기
     let closestIndex = -1;
     let minDistance = Infinity;
 
-    data.forEach((point, index) => {
+    labels.forEach((_, index) => {
       const pointX = sidePadding + chartPadding + pointSpacing * index;
       const distance = Math.abs(x - pointX);
 
@@ -33,10 +34,21 @@ export const useMouseEvents = (
     });
 
     if (closestIndex !== -1) {
-      const point = data[closestIndex];
+      const label = labels[closestIndex];
       const pointX = sidePadding + chartPadding + pointSpacing * closestIndex;
 
-      showTooltip(pointX, y - 10, `${point.label}: ${point.value}`);
+      // 모든 시리즈의 값 표시
+      let tooltipContent = `<strong>${label}</strong><br/>`;
+
+      series.forEach((s, index) => {
+        const value = s.data[closestIndex];
+        tooltipContent += `${s.name}: ${value}`;
+        if (index < series.length - 1) {
+          tooltipContent += "<br/>";
+        }
+      });
+
+      showTooltip(pointX, y - 10, tooltipContent);
     } else {
       hideTooltip();
     }

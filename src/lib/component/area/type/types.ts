@@ -1,8 +1,3 @@
-export interface AreaChartDataPoint {
-  label: string;
-  value: number;
-}
-
 export interface AreaChartSeries {
   name: string;
   color: string;

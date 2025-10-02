@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import { BarChartExample } from "./BarChartExample";
-import { MultiSeriesBarChartExample } from "./MultiSeriesBarChartExample";
 import { LineChartExample } from "./LineChartExample";
 import { PieChartExample } from "./PieChartExample";
 import { AreaChartExample } from "./AreaChartExample";
 import { SingleAreaChartExample } from "./SingleAreaChartExample";
 
-type ChartType = "bar" | "multiSeries" | "line" | "pie" | "area";
+type ChartType = "bar" | "line" | "pie" | "area";
 
 export const ExamplesDashboard = () => {
   const [activeChart, setActiveChart] = useState<ChartType>("bar");
 
   const chartOptions = [
     { key: "bar" as ChartType, label: "Bar Chart", icon: "📊" },
-    { key: "multiSeries" as ChartType, label: "Multi-Series Bar", icon: "📈" },
     {
       key: "line" as ChartType,
       label: "Line Chart & Point Shapes",
@@ -32,7 +30,8 @@ export const ExamplesDashboard = () => {
               📊 Interactive Bar Chart
             </h2>
             <p style={{ color: "#6b7280", marginBottom: 30 }}>
-              각 바에 마우스를 올려보세요. 색상과 축 스타일을 커스터마이징할 수
+              단일 시리즈와 다중 시리즈를 모두 지원하는 통합 바 차트입니다. 각
+              바에 마우스를 올려보세요. 색상과 축 스타일을 커스터마이징할 수
               있습니다.
             </p>
             <div
@@ -41,26 +40,6 @@ export const ExamplesDashboard = () => {
               }}
             >
               <BarChartExample />
-            </div>
-          </div>
-        );
-
-      case "multiSeries":
-        return (
-          <div>
-            <h2 style={{ color: "#374151", marginBottom: 20, fontSize: 24 }}>
-              📈 Multi-Series Bar Chart
-            </h2>
-            <p style={{ color: "#6b7280", marginBottom: 30 }}>
-              여러 데이터 시리즈를 비교할 수 있는 차트입니다. 각 시리즈는 다른
-              색상으로 표시됩니다.
-            </p>
-            <div
-              style={{
-                backgroundColor: "#ffffff",
-              }}
-            >
-              <MultiSeriesBarChartExample />
             </div>
           </div>
         );

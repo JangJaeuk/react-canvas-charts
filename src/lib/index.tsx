@@ -1,15 +1,13 @@
 // Chart Components - Public API
 export { BarChart } from "./component/bar";
-export { MultiSeriesBarChart } from "./component/multi-series-bar";
 export { LineChart } from "./component/line";
 export { AreaChart } from "./component/area";
 export { PieChart } from "./component/pie";
 
 // Data Types - Public API
-export type { BarChartDataPoint } from "./component/bar";
-export type { BarChartSeries } from "./component/multi-series-bar";
-export type { LineChartDataPoint, PointShape } from "./component/line";
-export type { AreaChartDataPoint } from "./component/area";
+export type { BarChartSeries } from "./component/bar";
+export type { LineChartSeries, PointShape } from "./component/line";
+export type { AreaChartSeries } from "./component/area";
 export type { PieChartDataPoint } from "./component/pie";
 
 // Note: Tooltip, hooks, and other internal components are not exported

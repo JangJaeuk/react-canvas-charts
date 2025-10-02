@@ -1,10 +1,11 @@
 import { useBarChart } from "../hook/useBarChart";
-import { BarChartDataPoint, BarChartConfig } from "../type";
+import { BarChartSeries, BarChartConfig } from "../type";
 import { Tooltip, TooltipTheme } from "../../tooltip";
 import "../../chart.css";
 
 interface BarChartProps {
-  data: BarChartDataPoint[];
+  labels: string[];
+  series: BarChartSeries[];
   className?: string;
   barWidth?: number;
   sidePadding?: number;
@@ -14,13 +15,15 @@ interface BarChartProps {
   gridColor?: string;
   labelTextColor?: string;
   gridTextColor?: string;
+  barSpacing?: number;
   tooltipTheme?: TooltipTheme;
 }
 
-export const BarChart = ({
-  data,
+const BarChart = ({
+  labels,
+  series,
   className = "",
-  barWidth = 60,
+  barWidth = 30,
   sidePadding = 40,
   chartPadding = 40,
   height = 300,
@@ -28,6 +31,7 @@ export const BarChart = ({
   gridColor = "#f3f4f6",
   labelTextColor = "#6b7280",
   gridTextColor = "#6b7280",
+  barSpacing = 5,
   tooltipTheme = "dark",
 }: BarChartProps) => {
   const config: BarChartConfig = {
@@ -39,6 +43,7 @@ export const BarChart = ({
     gridColor,
     labelTextColor,
     gridTextColor,
+    barSpacing,
   };
 
   const {
@@ -47,7 +52,7 @@ export const BarChart = ({
     tooltip,
     handleMouseMove,
     handleMouseLeave,
-  } = useBarChart(data, config, tooltipTheme);
+  } = useBarChart(labels, series, config, tooltipTheme);
 
   return (
     <div ref={containerRef} className={`chart-container ${className}`}>
@@ -61,3 +66,5 @@ export const BarChart = ({
     </div>
   );
 };
+
+export { BarChart };
