@@ -5,8 +5,9 @@ import { PieChartExample } from "./PieChartExample";
 import { AreaChartExample } from "./AreaChartExample";
 import { SingleAreaChartExample } from "./SingleAreaChartExample";
 import { DonutChartExample } from "./DonutChartExample";
+import { ScatterChartExample } from "./ScatterChartExample";
 
-type ChartType = "bar" | "line" | "pie" | "area" | "donut";
+type ChartType = "bar" | "line" | "pie" | "area" | "donut" | "scatter";
 
 export const ExamplesDashboard = () => {
   const [activeChart, setActiveChart] = useState<ChartType>("bar");
@@ -21,6 +22,7 @@ export const ExamplesDashboard = () => {
     { key: "area" as ChartType, label: "Area Chart", icon: "🏔️" },
     { key: "pie" as ChartType, label: "Pie Chart", icon: "🥧" },
     { key: "donut" as ChartType, label: "Donut Chart", icon: "🍩" },
+    { key: "scatter" as ChartType, label: "Scatter Chart", icon: "🎯" },
   ];
 
   const renderChart = () => {
@@ -136,6 +138,28 @@ export const ExamplesDashboard = () => {
               }}
             >
               <DonutChartExample />
+            </div>
+          </div>
+        );
+
+      case "scatter":
+        return (
+          <div>
+            <h2 style={{ color: "#374151", marginBottom: 20, fontSize: 24 }}>
+              🎯 Interactive Scatter Chart
+            </h2>
+            <p style={{ color: "#6b7280", marginBottom: 30 }}>
+              X, Y 좌표를 기반으로 데이터 포인트를 표시하는 산점도 차트입니다.
+              두 변수 간의 상관관계를 분석하는 데 유용합니다. 각 포인트에
+              마우스를 올려보세요. 포인트 크기로 3차원 정보를 표현할 수
+              있습니다.
+            </p>
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <ScatterChartExample />
             </div>
           </div>
         );
