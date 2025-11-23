@@ -1,6 +1,6 @@
 {
   "name": "@jaeuk/react-canvas-charts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A chart library for React that renders various chart types using HTML Canvas",
   "license": "MIT",
   "type": "module",
