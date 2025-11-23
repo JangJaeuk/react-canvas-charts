@@ -6,6 +6,7 @@ import {
   TOP_PADDING,
   BOTTOM_PADDING,
 } from "../type";
+import { DEFAULT_RESPONSIVE_WIDTH } from "../../common";
 
 export const useMouseEvents = (
   series: ScatterChartSeries[],
@@ -23,7 +24,7 @@ export const useMouseEvents = (
       const { sidePadding, chartPadding, pointRadius } = config;
 
       // useResponsiveCanvas의 스케일링 로직과 동일하게 처리
-      const responsiveWidth = 600; // useResponsiveCanvas의 기본값과 동일
+      const responsiveWidth = DEFAULT_RESPONSIVE_WIDTH;
       const rectWidth = rect.width;
       const rectHeight = rect.height;
 

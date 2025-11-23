@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
 
+// 기본 반응형 너비 (600px 이하일 때 스케일링 시작)
+export const DEFAULT_RESPONSIVE_WIDTH = 600;
+
 interface UseResponsiveCanvasProps {
   height: number;
   responsiveWidth?: number;
@@ -13,7 +16,7 @@ interface UseResponsiveCanvasProps {
 
 export const useResponsiveCanvas = ({
   height,
-  responsiveWidth = 600,
+  responsiveWidth = DEFAULT_RESPONSIVE_WIDTH,
   dependencies,
   onDraw,
 }: UseResponsiveCanvasProps) => {

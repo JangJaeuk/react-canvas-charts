@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { PieChartDataPoint, PieChartConfig } from "../type";
+import { DEFAULT_RESPONSIVE_WIDTH } from "../../common";
 
 export const useMouseEvents = (
   data: PieChartDataPoint[],
@@ -14,31 +15,46 @@ export const useMouseEvents = (
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      // Canvas의 실제 크기와 표시 크기 비율 계산
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const canvasX = x * scaleX;
-      const canvasY = y * scaleY;
+      // useResponsiveCanvas의 스케일링 로직과 동일하게 처리
+      const responsiveWidth = DEFAULT_RESPONSIVE_WIDTH;
+      const rectWidth = rect.width;
+      const rectHeight = rect.height;
 
-      // 중심점 계산
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+      // 실제 렌더링 크기 계산 (useCanvasRenderer와 동일한 로직)
+      let drawWidth: number;
+      let drawHeight: number;
 
-      // 실제 반지름 계산
+      if (rectWidth <= responsiveWidth) {
+        drawWidth = responsiveWidth;
+        drawHeight = config.height;
+      } else {
+        drawWidth = rectWidth;
+        drawHeight = config.height;
+      }
+
+      // 마우스 위치를 렌더링 좌표계로 변환
+      const mouseX = (x / rectWidth) * drawWidth;
+      const mouseY = (y / rectHeight) * drawHeight;
+
+      // 중심점 계산 (렌더링 좌표계)
+      const centerX = drawWidth / 2;
+      const centerY = drawHeight / 2;
+
+      // 실제 반지름 계산 (렌더링 좌표계)
       const maxRadius = Math.min(
-        (canvas.width - config.sidePadding * 2) / 2,
-        (canvas.height - config.sidePadding * 2) / 2
+        (drawWidth - config.sidePadding * 2) / 2,
+        (drawHeight - config.sidePadding * 2) / 2
       );
       const actualRadius = Math.min(config.radius, maxRadius);
 
       // 마우스 위치가 파이 차트 내부인지 확인
       const distance = Math.sqrt(
-        Math.pow(canvasX - centerX, 2) + Math.pow(canvasY - centerY, 2)
+        Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2)
       );
 
       if (distance <= actualRadius) {
         // 각도 계산 (12시 방향 기준)
-        let mouseAngle = Math.atan2(canvasY - centerY, canvasX - centerX);
+        let mouseAngle = Math.atan2(mouseY - centerY, mouseX - centerX);
         mouseAngle = (mouseAngle + Math.PI / 2 + 2 * Math.PI) % (2 * Math.PI);
 
         // 총합 계산
@@ -56,7 +72,23 @@ export const useMouseEvents = (
           ) {
             const percentage = ((data[i].value / total) * 100).toFixed(1);
             const tooltipContent = `${data[i].label}: ${data[i].value} (${percentage}%)`;
-            showTooltip(x, y - 10, tooltipContent);
+
+            // 슬라이스의 중심 각도 계산
+            const sliceCenterAngle = currentAngle + sliceAngle / 2;
+            // 슬라이스 중심 위치 계산 (렌더링 좌표계)
+            const tooltipRadius = actualRadius * 0.7; // 반지름의 70% 위치
+            const tooltipX =
+              centerX +
+              Math.cos(sliceCenterAngle - Math.PI / 2) * tooltipRadius;
+            const tooltipY =
+              centerY +
+              Math.sin(sliceCenterAngle - Math.PI / 2) * tooltipRadius;
+
+            // 렌더링 좌표를 화면 좌표로 변환
+            const tooltipXScreen = (tooltipX / drawWidth) * rectWidth;
+            const tooltipYScreen = (tooltipY / drawHeight) * rectHeight;
+
+            showTooltip(tooltipXScreen, tooltipYScreen - 10, tooltipContent);
             return;
           }
 
