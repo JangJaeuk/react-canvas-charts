@@ -5,6 +5,7 @@ export { AreaChart } from "./component/area";
 export { PieChart } from "./component/pie";
 export { DonutChart } from "./component/donut";
 export { ScatterChart } from "./component/scatter";
+export { RadarChart } from "./component/radar";
 
 // Data Types - Public API
 export type { BarChartSeries } from "./component/bar";
@@ -16,6 +17,7 @@ export type {
   ScatterChartSeries,
   ScatterChartDataPoint,
 } from "./component/scatter";
+export type { RadarChartSeries, RadarChartDataPoint } from "./component/radar";
 
 // Note: Tooltip, hooks, and other internal components are not exported
 // They are implementation details and should not be used directly by consumers

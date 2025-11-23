@@ -6,8 +6,16 @@ import { AreaChartExample } from "./AreaChartExample";
 import { SingleAreaChartExample } from "./SingleAreaChartExample";
 import { DonutChartExample } from "./DonutChartExample";
 import { ScatterChartExample } from "./ScatterChartExample";
+import { RadarChartExample } from "./RadarChartExample";
 
-type ChartType = "bar" | "line" | "pie" | "area" | "donut" | "scatter";
+type ChartType =
+  | "bar"
+  | "line"
+  | "pie"
+  | "area"
+  | "donut"
+  | "scatter"
+  | "radar";
 
 export const ExamplesDashboard = () => {
   const [activeChart, setActiveChart] = useState<ChartType>("bar");
@@ -23,6 +31,7 @@ export const ExamplesDashboard = () => {
     { key: "pie" as ChartType, label: "Pie Chart", icon: "🥧" },
     { key: "donut" as ChartType, label: "Donut Chart", icon: "🍩" },
     { key: "scatter" as ChartType, label: "Scatter Chart", icon: "🎯" },
+    { key: "radar" as ChartType, label: "Radar Chart", icon: "🕸️" },
   ];
 
   const renderChart = () => {
@@ -160,6 +169,28 @@ export const ExamplesDashboard = () => {
               }}
             >
               <ScatterChartExample />
+            </div>
+          </div>
+        );
+
+      case "radar":
+        return (
+          <div>
+            <h2 style={{ color: "#374151", marginBottom: 20, fontSize: 24 }}>
+              🕸️ Interactive Radar Chart
+            </h2>
+            <p style={{ color: "#6b7280", marginBottom: 30 }}>
+              극좌표계를 사용하여 여러 카테고리의 데이터를 한눈에 비교할 수 있는
+              레이더 차트입니다. 다차원 데이터를 시각화하는 데 유용합니다. 각
+              포인트에 마우스를 올려보세요. 영역, 선, 포인트 표시 옵션을
+              커스터마이징할 수 있습니다.
+            </p>
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <RadarChartExample />
             </div>
           </div>
         );
