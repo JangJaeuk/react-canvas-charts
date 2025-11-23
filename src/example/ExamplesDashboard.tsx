@@ -4,8 +4,9 @@ import { LineChartExample } from "./LineChartExample";
 import { PieChartExample } from "./PieChartExample";
 import { AreaChartExample } from "./AreaChartExample";
 import { SingleAreaChartExample } from "./SingleAreaChartExample";
+import { DonutChartExample } from "./DonutChartExample";
 
-type ChartType = "bar" | "line" | "pie" | "area";
+type ChartType = "bar" | "line" | "pie" | "area" | "donut";
 
 export const ExamplesDashboard = () => {
   const [activeChart, setActiveChart] = useState<ChartType>("bar");
@@ -19,6 +20,7 @@ export const ExamplesDashboard = () => {
     },
     { key: "area" as ChartType, label: "Area Chart", icon: "🏔️" },
     { key: "pie" as ChartType, label: "Pie Chart", icon: "🥧" },
+    { key: "donut" as ChartType, label: "Donut Chart", icon: "🍩" },
   ];
 
   const renderChart = () => {
@@ -113,6 +115,27 @@ export const ExamplesDashboard = () => {
               }}
             >
               <PieChartExample />
+            </div>
+          </div>
+        );
+
+      case "donut":
+        return (
+          <div>
+            <h2 style={{ color: "#374151", marginBottom: 20, fontSize: 24 }}>
+              🍩 Interactive Donut Chart
+            </h2>
+            <p style={{ color: "#6b7280", marginBottom: 30 }}>
+              파이 차트의 변형인 도넛 차트입니다. 중앙에 추가 정보를 표시할 수
+              있어 더욱 유용합니다. 각 섹션에 마우스를 올려보세요. 내부 반지름과
+              중앙 텍스트를 커스터마이징할 수 있습니다.
+            </p>
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <DonutChartExample />
             </div>
           </div>
         );
